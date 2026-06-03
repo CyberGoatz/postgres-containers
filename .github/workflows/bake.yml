@@ -4,6 +4,9 @@ on:
   schedule:
     # Build images once a week, on Mondays
     - cron: 0 8 * * 1
+  push:
+    tags:
+      - 'v*'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -50,9 +53,12 @@ jobs:
         version: ${{ fromJson(needs.get_versions.outputs.versions) }}
     uses: ./.github/workflows/bake_targets.yml
     with:
-      environment: ${{ github.event.inputs.environment }}
+      environment: ${{ github.event_name == 'push' && 'production' || github.event.inputs.environment || 'testing' }}
       postgresql_version: ${{ matrix.version }}
+      registry: ${{ vars.ACR_LOGIN_SERVER }}
     secrets:
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   Catalogs:

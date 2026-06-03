@@ -4,6 +4,9 @@ inputs:
   image:
     description: "The image to scan"
     required: true
+  registry:
+    description: "The registry used to pull the image"
+    required: true
   registry_user:
     description: "The user used to pull the image"
     required: true
@@ -21,10 +24,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Log in to the GitHub Container registry
+    - name: Log in to container registry
       uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4
       with:
-        registry: ghcr.io
+        registry: ${{ inputs.registry }}
         username: ${{ inputs.registry_user }}
         password: ${{ inputs.registry_token }}
 
