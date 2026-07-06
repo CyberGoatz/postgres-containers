@@ -112,7 +112,7 @@ jobs:
         id: build
         env:
           BUILDX_METADATA_PROVENANCE: disabled
-          environment: testing
+          environment: production
           registry: ${{ inputs.registry }}
           revision: ${{ github.sha }}
         with:
